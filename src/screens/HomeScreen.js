@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {
   StyleSheet,
   Text,
@@ -11,7 +11,11 @@ import {Context as BlogContext} from '../context/BlogContext';
 import Feather from 'react-native-vector-icons/Feather';
 
 const HomeScreen = ({navigation}) => {
-  const {state, deleteBlogPost} = useContext(BlogContext);
+  const {state, deleteBlogPost, getBlogPosts} = useContext(BlogContext);
+
+  useEffect(() => {
+    getBlogPosts();
+  }, []);
 
   navigation.setOptions({
     headerRight: () => (
@@ -29,9 +33,10 @@ const HomeScreen = ({navigation}) => {
         renderItem={({item}) => {
           return (
             <TouchableOpacity
+              key={item.id}
               onPress={() => navigation.navigate('Show', {id: item.id})}>
               <View style={styles.row}>
-                <Text style={styles.title}>
+                <Text key={item.id} style={styles.title}>
                   {item.title} - {item.id}
                 </Text>
                 <TouchableOpacity onPress={() => deleteBlogPost(item.id)}>
