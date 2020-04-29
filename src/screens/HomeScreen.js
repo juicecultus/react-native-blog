@@ -1,4 +1,5 @@
 import React, {useContext, useEffect} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
 import {
   StyleSheet,
   Text,
@@ -10,12 +11,26 @@ import {
 import {Context as BlogContext} from '../context/BlogContext';
 import Feather from 'react-native-vector-icons/Feather';
 
-const HomeScreen = ({navigation}) => {
+const HomeScreen = ({navigation, route}) => {
   const {state, deleteBlogPost, getBlogPosts} = useContext(BlogContext);
 
   useEffect(() => {
     getBlogPosts();
+
+    const listener = navigation.addListener('focus', () => {
+      getBlogPosts();
+    });
+
+    return () => listener.remove();
   }, []);
+
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const unsubscribe = API.subscribe(userId, user => setUser(data));
+
+  //     return () => unsubscribe();
+  //   }, [userId])
+  // );
 
   navigation.setOptions({
     headerRight: () => (
